@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#1a1a1a">
+    <title>MUSEUM — 3D Photo Gallery</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+
+    <!-- Loading Screen (clean dark screen, shown until 100%) -->
+    <div id="loading">
+        <div id="loading-label">Loading Assets</div>
+        <div id="loading-text">MUSEUM</div>
+        <div id="loading-pct">0%</div>
+        <div id="loading-bar-track">
+            <div id="loading-bar-fill"></div>
+        </div>
+    </div>
+
+    <!-- White flash transition overlay -->
+    <div id="white-flash"></div>
+
+    <!-- Scroll driver (revealed post-intro) -->
+    <div id="scroll-container"></div>
+
+    <!-- Pinterest Masonry Background — stays persistent through all states -->
+    <div id="hero-bg" class="hero-bg">
+        <div class="hero-grid">
+            <img src="./assets/images/webp/art.webp" class="hero-grid-item" alt="" decoding="async">
+            <img src="./assets/images/webp/art1.webp" class="hero-grid-item" alt="" decoding="async">
+            <img src="./assets/images/webp/art2.webp" class="hero-grid-item" alt="" decoding="async">
+            <img src="./assets/images/webp/art3.webp" class="hero-grid-item" alt="" decoding="async">
+            <img src="./assets/images/webp/art5.webp" class="hero-grid-item" alt="" decoding="async">
+            <img src="./assets/images/webp/art6.webp" class="hero-grid-item" alt="" decoding="async">
+            <img src="./assets/images/webp/rt4.webp" class="hero-grid-item" alt="" decoding="async">
+            <img src="./assets/images/webp/art1.webp" class="hero-grid-item" alt="" decoding="async">
+            <img src="./assets/images/webp/art2.webp" class="hero-grid-item" alt="" decoding="async">
+            <img src="./assets/images/webp/art3.webp" class="hero-grid-item" alt="" decoding="async">
+            <img src="./assets/images/webp/art5.webp" class="hero-grid-item" alt="" decoding="async">
+            <img src="./assets/images/webp/art6.webp" class="hero-grid-item" alt="" decoding="async">
+            <img src="./assets/images/webp/rt4.webp" class="hero-grid-item" alt="" decoding="async">
+            <img src="./assets/images/webp/art.webp" class="hero-grid-item" alt="" decoding="async">
+
+            <!-- Extra duplicates to guarantee the grid spans all the way down without gaps -->
+            <img src="./assets/images/webp/art3.webp" class="hero-grid-item" alt="" decoding="async">
+            <img src="./assets/images/webp/art1.webp" class="hero-grid-item" alt="" decoding="async">
+            <img src="./assets/images/webp/art5.webp" class="hero-grid-item" alt="" decoding="async">
+            <img src="./assets/images/webp/art2.webp" class="hero-grid-item" alt="" decoding="async">
+            <img src="./assets/images/webp/rt4.webp" class="hero-grid-item" alt="" decoding="async">
+            <img src="./assets/images/webp/art6.webp" class="hero-grid-item" alt="" decoding="async">
+            <img src="./assets/images/webp/art.webp" class="hero-grid-item" alt="" decoding="async">
+            <img src="./assets/images/webp/art5.webp" class="hero-grid-item" alt="" decoding="async">
+            <img src="./assets/images/webp/art2.webp" class="hero-grid-item" alt="" decoding="async">
+            <img src="./assets/images/webp/art1.webp" class="hero-grid-item" alt="" decoding="async">
+            <img src="./assets/images/webp/rt4.webp" class="hero-grid-item" alt="" decoding="async">
+            <img src="./assets/images/webp/art6.webp" class="hero-grid-item" alt="" decoding="async">
+        </div>
+        <div class="hero-bg-overlay"></div>
+    </div>
+
+    <!-- Hero UI (Starting Camera View) -->
+    <div id="hero-ui" class="hero-ui">
+        <!-- Editorial Corner Left -->
+        <div class="hero-corner hero-corner-left">
+            <span>Photo Museum</span>
+            <p>A curated collection of art, music, and memories in an immersive 3D space.</p>
+        </div>
+
+        <div class="hero-content">
+            <h1 class="hero-title">
+                <span>MU</span><span>SE</span><span>UM</span>
+            </h1>
+        </div>
+
+        <!-- Editorial Corner Right -->
+        <div class="hero-corner hero-corner-right">
+            <span>Explore the Collection</span>
+            <p>Scroll through the museum and discover 36 frames filled with our collection.</p>
+        </div>
+    </div>
+
+    <a id="letters4u-link" class="letters4u-link" href="https://letter4u.me/" hidden>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z" />
+        </svg>
+        <span>Letters 4U</span>
+        <span aria-hidden="true">↗</span>
+    </a>
+
+    <button id="start-hint" class="start-hint-styled" type="button" hidden>
+        <span class="start-hint-icon" aria-hidden="true">↗</span>
+        <span>Click to start</span>
+    </button>
+
+    <!-- Scroll hint (shown after flash) -->
+    <div id="scroll-hint">↓ Scroll to explore</div>
+
+    <!-- Import Map -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "./vendor/three-0.160.0/three.module.min.js",
+                "three/addons/": "./vendor/three-0.160.0/addons/"
+            }
+        }
+    </script>
+
+    <!-- UI Glue Script -->
+    <script src="./js/ui.js"></script>
+
+    <script type="module" src="./js/main.js"></script>
+</body>
+
+</html>

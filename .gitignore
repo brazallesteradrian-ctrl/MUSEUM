@@ -1,0 +1,17 @@
+# Local dependencies and generated files
+node_modules/
+.image-tools/
+dist/
+.vercel/
+.netlify/
+
+# Local secrets
+.env
+.env.*
+!.env.example
+
+# Editor and operating system files
+.idea/
+.DS_Store
+Thumbs.db
+*.log

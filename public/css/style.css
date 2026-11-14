@@ -1,0 +1,571 @@
+﻿/* ============================================
+   MUSES — Global Styles
+   ============================================ */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* ── Themed scrollbar (Gold / Dark) ── */
+::-webkit-scrollbar {
+    width: 9px;
+}
+
+::-webkit-scrollbar-track {
+    background: linear-gradient(180deg, #07050a 0%, #12100c 45%, #1a1510 55%, #07050a 100%);
+    border-left: 1px solid rgba(232, 201, 122, 0.08);
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--gold-light) 0%, var(--gold) 45%, #c4a050 100%);
+    border-radius: 100px;
+    border: 2px solid #0a0806;
+    box-shadow: 0 0 12px rgba(232, 201, 122, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #fff8e0 0%, var(--gold-light) 40%, var(--gold) 100%);
+    box-shadow: 0 0 18px rgba(232, 201, 122, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+::-webkit-scrollbar-thumb:active {
+    background: linear-gradient(180deg, var(--gold), #a88640);
+}
+
+::-webkit-scrollbar-corner {
+    background: #07050a;
+}
+
+:root {
+    --gold: #e8c97a;
+    --gold-light: #f5e4a8;
+    --cream: #fdf6e3;
+    --font: 'Outfit', 'Segoe UI', system-ui, sans-serif;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    background: #1a1a1a;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    overflow: hidden;
+    /* locked until scroll_mode */
+    overscroll-behavior: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* ── Unlocked Scroll State ── */
+html.scrollable {
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: auto;
+}
+
+html.scrollable body {
+    overflow: visible;
+    height: auto;
+}
+
+/* ── Canvas ── */
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: block;
+    z-index: 2;
+    /* 3D Canvas sits ON TOP of intro UI (Parallax) */
+    pointer-events: all;
+}
+
+/* ── Scroll driver (revealed after intro) ── */
+#scroll-container {
+    height: 1500vh;
+    pointer-events: none;
+    display: none;
+    position: relative;
+    z-index: 1;
+}
+
+/* ── Loading overlay ── */
+#loading {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    background: #0e0c0a;
+    /* Plain dark bg — separate from hero */
+    z-index: 100;
+    pointer-events: none;
+    transition: opacity 0.7s ease;
+}
+
+#loading-label {
+    font-family: 'Outfit', 'Segoe UI', system-ui, sans-serif;
+    font-size: clamp(0.65rem, 1.8vw, 0.8rem);
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: rgba(232, 201, 122, 0.55);
+}
+
+#loading-text {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 8vw, 5rem);
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: 0.05em;
+}
+
+#loading-pct {
+    font-family: 'Outfit', 'Segoe UI', system-ui, sans-serif;
+    font-size: clamp(0.85rem, 2vw, 1rem);
+    color: rgba(255, 255, 255, 0.35);
+    letter-spacing: 0.15em;
+}
+
+#loading-bar-track {
+    width: min(280px, 55vw);
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+#loading-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--gold);
+    border-radius: 999px;
+    transition: width 0.3s ease;
+}
+
+/* hero-bg starts invisible — revealed after loading */
+.hero-bg {
+    opacity: 0;
+    transition: opacity 1.2s ease;
+}
+
+.hero-bg.visible {
+    opacity: 1;
+}
+
+/* ── White flash transition ── */
+#white-flash {
+    position: fixed;
+    inset: 0;
+    background: #ffffff;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 50;
+    transition: opacity 0.35s ease-in-out;
+}
+
+/* ── Scroll mode hint (appears bottom-center on mobile) ── */
+#scroll-hint {
+    position: fixed;
+    bottom: clamp(20px, 5vh, 36px);
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: #000000;
+    /* Black color as requested */
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: clamp(0.75rem, 2vw, 0.9rem);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-shadow: 0 2px 6px rgba(255, 255, 255, 0.9);
+    /* White shadow to ensure visibility over dark backgrounds */
+    pointer-events: none;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 1s ease;
+    animation: scrollBounce 2s ease-in-out infinite;
+}
+
+#scroll-hint.show {
+    opacity: 1;
+}
+
+@keyframes scrollBounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+/* ── Pinterest Masonry Background ── */
+.hero-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background: #f5f2ed;
+    overflow: hidden;
+    transition: opacity 0.9s ease;
+    pointer-events: none;
+}
+
+/* 3-column masonry using CSS columns, slightly tilted */
+.hero-grid {
+    position: absolute;
+    inset: -8% -5%;
+    /* a tiny tilt makes it feel editorial/alive */
+    transform: rotate(-3deg) scale(1.08);
+    column-count: 4;
+    column-gap: 10px;
+    padding: 10px;
+}
+
+.hero-grid-item {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    object-fit: cover;
+    /* subtle drop shadow for depth */
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.10);
+    break-inside: avoid;
+    /* every image gently bobs at a different speed */
+    animation: masonFloat 12s ease-in-out infinite alternate;
+}
+
+.hero-grid-item:nth-child(2n) {
+    animation-duration: 17s;
+    animation-direction: alternate-reverse;
+}
+
+.hero-grid-item:nth-child(3n) {
+    animation-duration: 21s;
+}
+
+.hero-grid-item:nth-child(4n) {
+    animation-duration: 14s;
+    animation-direction: alternate-reverse;
+}
+
+.hero-grid-item:nth-child(5n) {
+    animation-duration: 25s;
+}
+
+@keyframes masonFloat {
+    0% {
+        transform: translateY(0px);
+    }
+
+    100% {
+        transform: translateY(-18px);
+    }
+}
+
+/* Overlay removed to let the images be seen fully */
+.hero-bg-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+@media (max-width: 1024px) {
+    .hero-grid {
+        column-count: 3;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-grid {
+        column-count: 2;
+        column-gap: 8px;
+        padding: 8px;
+        transform: rotate(-2.5deg) scale(1.06);
+    }
+
+    .hero-grid-item {
+        margin-bottom: 8px;
+        border-radius: 8px;
+    }
+
+    .hero-bg-overlay {
+        background: none;
+    }
+}
+
+/* ── Hero UI (Starting Camera) ── */
+.hero-ui {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    /* Bottom for mobile */
+    justify-content: flex-start;
+    /* Left for mobile */
+    padding: 0 6vw 8vh;
+    z-index: 1;
+    /* Below the 3D Canvas! */
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+}
+
+/* PC View: Centered but pushed slightly up so the 3D model doesn't cover it too much */
+@media (min-width: 769px) {
+    .hero-ui {
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding-bottom: 25vh;
+        /* Pushes text higher */
+    }
+
+    .hero-content {
+        align-items: center;
+    }
+}
+
+.hero-ui.show {
+    opacity: 1;
+}
+
+.hero-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.hero-title {
+    font-family: 'Playfair Display', serif;
+    /* Elegant museum serif font */
+    font-size: clamp(6rem, 20vw, 15rem);
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    line-height: 0.88;
+    /* Bright color with a stroke */
+    background: linear-gradient(160deg, #ffffff 0%, #fdf6e3 40%, var(--gold) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    -webkit-text-stroke: 1.5px rgba(20, 15, 10, 0.9);
+    /* Dark stroke so the bright text pops */
+    filter: drop-shadow(0px 8px 16px rgba(0, 0, 0, 0.15));
+    margin: 0;
+    animation: heroFadeIn 1.5s ease 0.2s both;
+}
+
+.hero-corner {
+    position: absolute;
+    bottom: 8vh;
+    max-width: 260px;
+    font-family: 'Outfit', sans-serif;
+    animation: heroFadeIn 1.5s ease 0.8s both;
+    pointer-events: auto;
+}
+
+.hero-corner-left {
+    left: 6vw;
+    text-align: left;
+}
+
+.hero-corner-right {
+    right: 6vw;
+    text-align: right;
+}
+
+.hero-corner span {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #1a1410;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+}
+
+.hero-corner p {
+    font-size: 0.75rem;
+    color: #444;
+    line-height: 1.5;
+    margin: 0;
+    opacity: 0.85;
+}
+
+@media (max-width: 768px) {
+    .hero-corner {
+        display: none;
+        /* Tatanggalin sa mobile (User request) */
+    }
+
+    .hero-ui {
+        display: block;
+        padding: 0;
+    }
+
+    .hero-title {
+        position: absolute;
+        top: 0vh;
+        /* Reset position so top doesn't clip */
+        left: 0;
+        width: 100vw;
+        display: flex;
+        flex-direction: column;
+        font-size: 32vw;
+        /* Shrunk font so it fits inside the viewport */
+        letter-spacing: 0.15em;
+        /* Increased spacing as requested */
+        padding-left: 0.15em;
+        /* Required to perfectly center the text when using letter-spacing */
+        line-height: 0.72;
+        animation: verticalFadeIn 1.5s cubic-bezier(0.2, 1, 0.3, 1) 0.3s both;
+    }
+
+    .hero-title span {
+        display: block;
+        text-align: center;
+        /* Center them perfectly across the screen */
+        width: 100%;
+    }
+
+}
+
+.letters4u-link {
+    position: fixed;
+    z-index: 3;
+    top: max(24px, calc(env(safe-area-inset-top) + 16px));
+    left: max(24px, calc(env(safe-area-inset-left) + 16px));
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border: 1px solid rgba(232, 201, 122, 0.45);
+    border-radius: 999px;
+    background: rgba(14, 11, 8, 0.9);
+    color: var(--gold-light);
+    font-family: var(--font);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2);
+    transition: background 0.25s ease, border-color 0.25s ease;
+}
+
+.letters4u-link[hidden] {
+    display: none;
+}
+
+.letters4u-link:hover {
+    background: #241c10;
+    border-color: var(--gold-light);
+}
+
+.letters4u-link:focus-visible {
+    outline: 2px solid var(--gold-light);
+    outline-offset: 5px;
+}
+
+.start-hint-styled {
+    position: fixed;
+    z-index: 3;
+    bottom: max(4vh, calc(env(safe-area-inset-bottom) + 20px));
+    left: 50%;
+    transform: translateX(-50%);
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 24px;
+    border: 1px solid rgba(232, 201, 122, 0.55);
+    border-radius: 999px;
+    background: rgba(14, 11, 8, 0.9);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+    text-align: center;
+    font-family: 'Outfit', sans-serif;
+    font-size: clamp(0.7rem, 2vw, 0.9rem);
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background 0.25s ease, border-color 0.25s ease;
+}
+
+.start-hint-styled[hidden] {
+    display: none;
+}
+
+.start-hint-styled:hover {
+    background: #241c10;
+    border-color: var(--gold-light);
+}
+
+.start-hint-styled:focus-visible {
+    outline: 2px solid var(--gold-light);
+    outline-offset: 5px;
+}
+
+.start-hint-icon {
+    font-size: 1.2rem;
+    line-height: 1;
+}
+
+html.tab-hidden * {
+    animation-play-state: paused !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-grid-item,
+    .hero-title,
+    .hero-corner,
+    #scroll-hint {
+        animation: none;
+    }
+}
+
+@keyframes pulseOpacity {
+
+    0%,
+    100% {
+        opacity: 0.5;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+@keyframes heroFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes verticalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+

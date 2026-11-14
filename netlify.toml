@@ -1,0 +1,4 @@
+[build]
+  publish = "public"
+
+# Response headers are generated in public/_headers (also supports manual uploads).
